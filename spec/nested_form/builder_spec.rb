@@ -35,6 +35,19 @@ require "spec_helper"
         end.should == '<div class="fields">Task</div><div class="fields">Task</div>'
       end
 
+      it "should wrap nested fields each in a custom wrapper with class" do
+        @project.tasks.build
+        @builder.fields_for(:tasks, :wrapper_tag => :p) { "Task" }.should == '<p class="fields">Task</p>'
+        @builder.fields_for(:tasks)                     { "Task" }.should == '<p class="fields">Task</p>'
+      end
+
+#      it "should build nested fields each in a custom builder" do
+#        pending
+#        @project.tasks.build
+#        @builder.fields_for(:tasks, :builder => CustomBuilder) { "Task" }.should == '<div class="fields">Task</div>'
+#        @builder.fields_for(:tasks)                     { "Task" }.should == '<div class="fields">Task</div>'
+#      end
+
       it "should add task fields to hidden div after form" do
         pending
         output = ""

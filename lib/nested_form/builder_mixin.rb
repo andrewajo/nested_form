@@ -14,6 +14,8 @@ module NestedForm
     def link_to_add(*args, &block)
       options = args.extract_options!.symbolize_keys
       association = args.pop
+      @nested_wrapper_tag = options.delete(:wrapper_tag) || @nested_wrapper_tag
+      @nested_builder = options.delete(:builder) || @nested_builder
       options[:class] = [options[:class], "add_nested_fields"].compact.join(" ")
       options["data-association"] = association
 
@@ -26,14 +28,14 @@ module NestedForm
       @template.after_nested_form(association) do
         model_object = object.class.reflect_on_association(association).klass.new
         output = %Q[<div id="#{association}_fields_blueprint" style="display: none">].html_safe
-        output << fields_for(association, model_object, :child_index => "new_#{association}", &@fields[association])
+        output << fields_for(association, model_object, :child_index => "new_#{association}", :builder => @nested_builder, &@fields[association])
         output.safe_concat('</div>')
         output
       end
       @template.link_to(*args, &block)
     end
 
-    # Adds a link to remove the associated record. The first argment is the name of the link.
+    # Adds a link to remove the associated record. The first argument is the name of the link.
     #
     #   f.link_to_remove("Remove Task")
     #
@@ -61,10 +63,9 @@ module NestedForm
     end
 
     def fields_for_nested_model(name, object, options, block)
-      output = '<div class="fields">'.html_safe
-      output << super
-      output.safe_concat('</div>')
-      output
+      @nested_wrapper_tag = options.delete(:wrapper_tag) || @nested_wrapper_tag || :div
+      @nested_builder = (options[:builder] ||= @nested_builder)
+      @template.content_tag  @nested_wrapper_tag, super, :class => 'fields'
     end
   end
 end
