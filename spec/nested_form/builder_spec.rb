@@ -35,12 +35,12 @@ require "spec_helper"
         @builder.fields_for(:tasks)                     { "Task" }.should == '<p class="fields">Task</p>'
       end
 
-#      it "should build nested fields each in a custom builder" do
-#        pending
-#        @project.tasks.build
-#        @builder.fields_for(:tasks, :builder => CustomBuilder) { "Task" }.should == '<div class="fields">Task</div>'
-#        @builder.fields_for(:tasks)                     { "Task" }.should == '<div class="fields">Task</div>'
-#      end
+      it "should build nested fields each in a custom builder" do
+        pending
+        @project.tasks.build
+        @builder.fields_for(:tasks) { "Task" }.should == '<div class="fields">Task</div>'
+        @builder.fields_for(:tasks)                     { "Task" }.should == '<div class="fields">Task</div>'
+      end
 
       it "should add task fields to hidden div after form" do
         pending
@@ -48,7 +48,7 @@ require "spec_helper"
         mock(@template).after_nested_form(:tasks) { |arg, block| output << block.call }
         @builder.fields_for(:tasks) { "Task" }
         @builder.link_to_add("Add", :tasks)
-        output.should == '<div id="tasks_fields_blueprint" style="display: none"><div class="fields">Task</div></div>'
+        output.should == "<script>windows['tasks_fields_blueprint']=\"<div class=\"fields\">Task<\/div>\";</script>"
       end
     end
   end
