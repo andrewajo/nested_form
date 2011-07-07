@@ -41,7 +41,7 @@ require "spec_helper"
         mock(@template).after_nested_form(:tasks) { |arg, block| output << block.call }
         @builder.fields_for(:tasks) { "Task" }
         @builder.link_to_add("Add", :tasks)
-        output.should == '<div id="tasks_fields_blueprint" style="display: none"><div class="fields">Task</div></div>'
+        output.should == '<textarea id="tasks_fields_blueprint" style="display: none"><div class="fields">Task</div></textarea>'
       end
     end
   end
